@@ -10,6 +10,24 @@
   --accent: #846a29;
   --shadow: 0 20px 30px rgba(0,0,0,0.4);
 }
+.btn {
+  display: inline-block;
+  padding: .9rem 1.2rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all .25s ease;
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .btn {
+    padding: .5rem 1rem;  /* Decrease padding for a smaller height */
+    font-size: 14px;       /* Smaller font size */
+  }
+}
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
@@ -714,3 +732,4 @@ html, body {
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
+
