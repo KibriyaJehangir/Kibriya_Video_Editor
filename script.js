@@ -129,8 +129,17 @@ document.addEventListener('click', e => {
   const card = e.target.closest('.card');
   if (!card) return;
   const src = card.dataset.video;
-  frame.src = src + (src.includes('?') ? '&' : '?') +
-    'autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3';
+  frame.src =
+  src +
+  (src.includes('?') ? '&' : '?') +
+  'autoplay=1' +
+  '&controls=0' +
+  '&modestbranding=1' +
+  '&rel=0' +
+  '&iv_load_policy=3' +
+  '&vq=hd1080' +          // 👈 REQUEST 1080p
+  '&playsinline=1';
+
   modal.classList.add('show');
   modal.setAttribute('aria-hidden', 'false');
   overlay.style.opacity = 1; // show overlay when video starts
@@ -244,4 +253,5 @@ window.addEventListener('load', function() {
     document.querySelector('.hero-media').classList.add('loaded');
   }, 100); // Delay to ensure the page fully loads before fading in
 });
+
 
