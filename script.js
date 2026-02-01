@@ -27,7 +27,7 @@ const reelsLinks = [
 ];
 
 const videosLinks = [
-  "https://www.youtube.com/embed/VIDEO_ID1",
+  "https://www.youtube.com/embed/rwE3X72K8QI",
   "https://www.youtube.com/embed/VIDEO_ID2",
   // ... up to 20
 ];
@@ -244,3 +244,4 @@ window.addEventListener('load', function() {
     document.querySelector('.hero-media').classList.add('loaded');
   }, 100); // Delay to ensure the page fully loads before fading in
 });
+
