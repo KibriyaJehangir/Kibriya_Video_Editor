@@ -732,4 +732,12 @@ html, body {
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
+/* Force single column for all sections EXCEPT "All" */
+#grid-reels,
+#grid-videos,
+#grid-cinematics,
+#grid-ads {
+  grid-template-columns: 1fr !important;
+}
+
 
