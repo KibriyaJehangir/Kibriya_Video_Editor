@@ -18,40 +18,45 @@ document.querySelector('.nav-toggle')?.addEventListener('click', () => {
 // ---------- Footer year ----------
 document.getElementById('year').textContent = new Date().getFullYear();
 
-/* ---------- Dedicated arrays for local video files ---------- */
+/* ---------- Dedicated arrays for YouTube embed links ---------- */
+/* IMPORTANT: use /embed/VIDEO_ID format, not watch?v=VIDEO_ID */
 const reelsLinks = [
-  'videos/reel/reel1.mp4',
-  'videos/reel/reel2.mp4',
-  // add more files
+  "https://www.youtube.com/embed/VIDEO_ID1",
+  "https://www.youtube.com/embed/VIDEO_ID2",
+  // ... up to 20
 ];
 
 const videosLinks = [
-  'videos/videos/video1.mp4',
-  'videos/videos/video2.mp4',
-  // add more files
+  "https://www.youtube.com/embed/rwE3X72K8QI",
+  "https://www.youtube.com/embed/VIDEO_ID2",
+  // ... up to 20
 ];
 
 const cinematicsLinks = [
-  'videos/cinematics/cinematic1.mp4',
-  'videos/cinematics/cinematic2.mp4',
-  // add more files
+  "https://www.youtube.com/embed/VIDEO_ID1",
+  "https://www.youtube.com/embed/VIDEO_ID2",
+  // ... up to 20
 ];
 
 const adsLinks = [
-  'videos/ads/ad1.mp4',
-  'videos/ads/ad2.mp4',
-  // add more files
+  "https://www.youtube.com/embed/VIDEO_ID1",
+  "https://www.youtube.com/embed/VIDEO_ID2",
+  // ... up to 20
 ];
 
-/* ---------- Card builder for local videos ---------- */
+/* ---------- Card builder with YouTube thumbnails ---------- */
 const makeCard = (src, title, desc, category) => {
   const article = document.createElement('article');
   article.className = 'card';
   article.dataset.category = category;
   article.dataset.video = src;
 
-  // Placeholder thumbnail; replace with actual first-frame images if you want
-  const thumbUrl = `https://source.unsplash.com/1600x900/?${category},cinema`;
+  // Extract video ID from embed URL
+  const match = src.match(/embed\/([a-zA-Z0-9_-]{6,})/);
+  const videoId = match ? match[1] : null;
+  const thumbUrl = videoId
+    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+    : `https://source.unsplash.com/1600x900/?luxury,${category}`;
 
   article.innerHTML = `
     <div class="thumb" style="background-image:url('${thumbUrl}');"></div>
@@ -88,7 +93,6 @@ const all = [
   ...cinematicsLinks.slice(0, 5).map(u => ({ u, c: 'cinematics' })),
   ...adsLinks.slice(0, 5).map(u => ({ u, c: 'ads' })),
 ];
-
 const gridAll = document.getElementById('grid-all');
 all.forEach((item, i) => {
   const title = `Selected ${item.c} ${String(i + 1).padStart(2, '0')}`;
@@ -105,7 +109,6 @@ const grids = {
   cinematics: document.getElementById('grid-cinematics'),
   ads: document.getElementById('grid-ads')
 };
-
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     filterButtons.forEach(b => b.classList.remove('active'));
@@ -117,7 +120,7 @@ filterButtons.forEach(btn => {
   });
 });
 
-/* ---------- Modal for local video playback ---------- */
+/* ---------- Modal ---------- */
 const modal = document.getElementById('videoModal');
 const frame = document.getElementById('videoFrame');
 const overlay = document.getElementById('titleOverlay');
@@ -125,16 +128,21 @@ const overlay = document.getElementById('titleOverlay');
 document.addEventListener('click', e => {
   const card = e.target.closest('.card');
   if (!card) return;
-
   const src = card.dataset.video;
-
-  frame.innerHTML = `
-    <video autoplay controls playsinline style="width:100%;height:100%;" src="${src}"></video>
-  `;
+  frame.src =
+  src +
+  (src.includes('?') ? '&' : '?') +
+  'autoplay=1' +
+  '&controls=0' +
+  '&modestbranding=1' +
+  '&rel=0' +
+  '&iv_load_policy=3' +
+  '&vq=hd1080' +          // 👈 REQUEST 1080p
+  '&playsinline=1';
 
   modal.classList.add('show');
   modal.setAttribute('aria-hidden', 'false');
-  overlay.style.opacity = 1;
+  overlay.style.opacity = 1; // show overlay when video starts
 });
 
 document.querySelector('.modal-close').addEventListener('click', closeModal);
@@ -145,8 +153,8 @@ modal.addEventListener('click', e => {
 function closeModal() {
   modal.classList.remove('show');
   modal.setAttribute('aria-hidden', 'true');
-  frame.innerHTML = '';
-  overlay.style.opacity = 0;
+  frame.src = '';
+  overlay.style.opacity = 0; // hide overlay when video ends
 }
 
 /* ---------- Testimonials slider ---------- */
@@ -156,17 +164,14 @@ const showSlide = i => {
   slides.forEach(s => s.classList.remove('active'));
   slides[i]?.classList.add('active');
 };
-
 document.querySelector('.next')?.addEventListener('click', () => {
   idx = (idx + 1) % slides.length;
   showSlide(idx);
 });
-
 document.querySelector('.prev')?.addEventListener('click', () => {
   idx = (idx - 1 + slides.length) % slides.length;
   showSlide(idx);
 });
-
 setInterval(() => {
   idx = (idx + 1) % slides.length;
   showSlide(idx);
@@ -178,7 +183,6 @@ form?.addEventListener('submit', e => {
   e.preventDefault();
   let valid = true;
   form.querySelectorAll('.error').forEach(el => (el.textContent = ''));
-
   const name = form.name.value.trim();
   const email = form.email.value.trim();
   const budget = form.budget.value;
@@ -201,35 +205,51 @@ function setError(field, msg) {
   const group = document.getElementById(field).closest('.form-group');
   group.querySelector('.error').textContent = msg;
 }
-
-/* ---------- View More functionality ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   const viewMoreBtn = document.getElementById("viewMoreBtn");
   let expanded = false;
 
   function applyLimit() {
     const grids = document.querySelectorAll(".grid");
+
     grids.forEach(grid => {
       const items = grid.querySelectorAll(".portfolio-item");
+
       items.forEach((item, index) => {
-        if (!expanded && index >= 6) item.style.display = "none";
-        else item.style.display = "block";
+        if (!expanded && index >= 6) {
+          item.style.display = "none";
+        } else {
+          item.style.display = "block";
+        }
       });
     });
   }
 
+  // Run AFTER videos load
   setTimeout(applyLimit, 300);
 
   viewMoreBtn.addEventListener("click", () => {
     expanded = !expanded;
     applyLimit();
-    viewMoreBtn.textContent = expanded ? "Show less" : "View more projects";
+
+    viewMoreBtn.textContent = expanded
+      ? "Show less"
+      : "View more projects";
   });
 });
 
-/* ---------- Page load animations ---------- */
 window.addEventListener('load', () => {
+  // Apply shake to the body
   document.body.classList.add('page-shake');
-  setTimeout(() => document.body.classList.remove('page-shake'), 800);
-  setTimeout(() => document.querySelector('.hero-media').classList.add('loaded'), 100);
+
+  // Remove class after animation finishes to avoid interfering with other animations
+  setTimeout(() => {
+    document.body.classList.remove('page-shake');
+  }, 800); // same as animation duration
+});
+
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.querySelector('.hero-media').classList.add('loaded');
+  }, 100); // Delay to ensure the page fully loads before fading in
 });
