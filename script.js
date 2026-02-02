@@ -31,7 +31,7 @@ const reelsLinks = [
 const videosLinks = [
     
   "https://player.vimeo.com/video/1160822544?badge=0&autopause=0&player_id=0&app_id=58479",
-    "https://www.youtube.com/embed/VIDEO_ID2",
+    "https://player.vimeo.com/video/1161066468?badge=0&autopause=0&player_id=0&app_id=58479",
     // ... up to 20
 ];
 const cinematicsLinks = [
@@ -250,4 +250,5 @@ window.addEventListener('load', function() {
         document.querySelector('.hero-media').classList.add('loaded');
     }, 100); // Delay to ensure the page fully loads before fading in
 });
+
 
