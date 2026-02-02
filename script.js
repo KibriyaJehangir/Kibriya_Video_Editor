@@ -134,21 +134,38 @@ const overlay = document.getElementById('titleOverlay');
 document.addEventListener('click', e => {
     const card = e.target.closest('.card');
     if (!card) return;
+
     const src = card.dataset.video;
-    frame.src =
-        src +
-        (src.includes('?') ? '&' : '?') +
-        'autoplay=1' +
-        '&controls=0' +
-        '&modestbranding=1' +
-        '&rel=0' +
-        '&iv_load_policy=3' +
-        '&vq=hd1080' + // 👈 REQUEST 1080p
-        '&playsinline=1';
+    let finalSrc = src;
+
+    if (src.includes('youtube.com')) {
+        finalSrc =
+            src +
+            (src.includes('?') ? '&' : '?') +
+            'autoplay=1' +
+            '&controls=0' +
+            '&modestbranding=1' +
+            '&rel=0' +
+            '&iv_load_policy=3' +
+            '&vq=hd1080' +
+            '&playsinline=1';
+    }
+
+    if (src.includes('vimeo.com')) {
+        finalSrc =
+            src +
+            (src.includes('?') ? '&' : '?') +
+            'autoplay=1' +
+            '&muted=0' +
+            '&quality=1080p';
+    }
+
+    frame.src = finalSrc;
     modal.classList.add('show');
     modal.setAttribute('aria-hidden', 'false');
-    overlay.style.opacity = 1; // show overlay when video starts
+    overlay.style.opacity = 1;
 });
+
 
 document.querySelector('.modal-close').addEventListener('click', closeModal);
 modal.addEventListener('click', e => {
@@ -250,5 +267,6 @@ window.addEventListener('load', function() {
         document.querySelector('.hero-media').classList.add('loaded');
     }, 100); // Delay to ensure the page fully loads before fading in
 });
+
 
 
