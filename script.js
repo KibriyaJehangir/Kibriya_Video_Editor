@@ -41,7 +41,7 @@ const cinematicsLinks = [
 ];
 const adsLinks = [
     "https://player.vimeo.com/video/1161478470?h=d5fcdb002d",
-    "https://www.youtube.com/embed/VIDEO_ID2",
+    "https://player.vimeo.com/video/1162157482?badge=0&autopause=0&player_id=0&app_id=58479",
     // ... up to 20
 ];
 
@@ -267,6 +267,7 @@ window.addEventListener('load', function() {
         document.querySelector('.hero-media').classList.add('loaded');
     }, 100); // Delay to ensure the page fully loads before fading in
 });
+
 
 
 
